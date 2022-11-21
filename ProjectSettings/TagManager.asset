@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Archer
+  - infoPanel
   layers:
   - Default
   - TransparentFX
@@ -13,8 +15,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - Tile
+  - Obstacle
   - 
   - 
   - 
@@ -38,6 +40,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BG
+    uniqueID: 299086965
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Sky
+    uniqueID: 537989683
     locked: 0
