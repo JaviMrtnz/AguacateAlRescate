@@ -39,7 +39,7 @@ public class Tile : MonoBehaviour
             return false;
         }
     }
-
+    
     public void Highlight() {
 		
         rend.color = highlightedColor;
