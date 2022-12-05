@@ -57,52 +57,64 @@ public class Unit : MonoBehaviour
         }
     }
 
-    private void OnMouseDown() // select character or deselect if already selected
+    public void OnMouseDown() // select character or deselect if already selected
     {
-        
-        ResetWeaponIcon();
 
-        if (isSelected == true)
+        if (gm.playerTurn == 1)
         {
+            ResetWeaponIcon();
             
-            isSelected = false;
-            gm.selectedUnit = null;
-            gm.ResetTiles();
+            if (isSelected == true)
+            {
 
-        }
-        else {
-            if (playerNumber == gm.playerTurn) { // select unit only if it's his turn
-                if (gm.selectedUnit != null)
-                { // deselect the unit that is currently selected, so there's only one isSelected unit at a time
-                    gm.selectedUnit.isSelected = false;
-                }
+                isSelected = false;
+                gm.selectedUnit = null;
                 gm.ResetTiles();
 
-                gm.selectedUnit = this;
+            }
+            else
+            {
+                if (playerNumber == gm.playerTurn)
+                { // select unit only if it's his turn
+                    if (gm.selectedUnit != null)
+                    { // deselect the unit that is currently selected, so there's only one isSelected unit at a time
+                        gm.selectedUnit.isSelected = false;
+                    }
+                    gm.ResetTiles();
 
-                isSelected = true;
-				if(source != null){
-					source.Play();
-				}
-				
-                GetWalkableTiles();
-                GetEnemies();
+                    gm.selectedUnit = this;
+
+                    isSelected = true;
+                    if (source != null)
+                    {
+                        source.Play();
+                    }
+
+                    if (!hasMoved)
+                    {
+                        Tile[] tiles = mGetWalkableTiles();
+                        Pathfinding.HighlightTiles(transform, ref tiles);
+                    }
+
+                    //GetWalkableTiles();
+                    GetEnemies();
+                }
+
             }
 
-        }
 
 
-
-        Collider2D col = Physics2D.OverlapCircle(Camera.main.ScreenToWorldPoint(Input.mousePosition), 0.15f);
-        if (col != null)
-        {
-            Unit unit = col.GetComponent<Unit>(); // double check that what we clicked on is a unit
-            if (unit != null && gm.selectedUnit != null)
+            Collider2D col = Physics2D.OverlapCircle(Camera.main.ScreenToWorldPoint(Input.mousePosition), 0.15f);
+            if (col != null)
             {
-                if (gm.selectedUnit.enemiesInRange.Contains(unit) && !gm.selectedUnit.hasAttacked)
-                { // does the currently selected unit have in his list the enemy we just clicked on
-                    gm.selectedUnit.Attack(unit);
+                Unit unit = col.GetComponent<Unit>(); // double check that what we clicked on is a unit
+                if (unit != null && gm.selectedUnit != null)
+                {
+                    if (gm.selectedUnit.enemiesInRange.Contains(unit) && !gm.selectedUnit.hasAttacked)
+                    { // does the currently selected unit have in his list the enemy we just clicked on
+                        gm.selectedUnit.Attack(unit);
 
+                    }
                 }
             }
         }
@@ -116,24 +128,49 @@ public class Unit : MonoBehaviour
         }
     }
 
-
-
-    void GetWalkableTiles() { // Looks for the tiles the unit can walk on
-        if (hasMoved == true) {
+    public void GetWalkableTiles()
+    { // Looks for the tiles the unit can walk on
+        if (hasMoved == true)
+        {
             return;
         }
 
         Tile[] tiles = FindObjectsOfType<Tile>();
-        foreach (Tile tile in tiles) {
+        foreach (Tile tile in tiles)
+        {
             if (Mathf.Abs(transform.position.x - tile.transform.position.x) + Mathf.Abs(transform.position.y - tile.transform.position.y) <= tileSpeed)
             { // how far he can move
                 if (tile.isClear() == true)
                 { // is the tile clear from any obstacles
-                    tile.Highlight();
+                  //tile.Highlight();
+                    tile.isWalkable = true;
                 }
 
-            }          
+            }
         }
+    }
+
+    private Tile[] mGetWalkableTiles()
+    { // Looks for the tiles the unit can walk on
+        if (hasMoved == true)
+        {
+            return null;
+        }
+
+        Tile[] tiles = FindObjectsOfType<Tile>();
+        foreach (Tile tile in tiles)
+        {
+            if (Mathf.Abs(transform.position.x - tile.transform.position.x) + Mathf.Abs(transform.position.y - tile.transform.position.y) <= tileSpeed)
+            { // how far he can move
+                if (tile.isClear() == true)
+                { // is the tile clear from any obstacles
+                    tile.isWalkable = true;
+                }
+
+            }
+        }
+
+        return tiles;
     }
 
     void GetEnemies() {
@@ -156,8 +193,14 @@ public class Unit : MonoBehaviour
 
     public void Move(Transform movePos)
     {
+
+        Tile[] tiles = mGetWalkableTiles();
+        List<Vector2Int> path = Pathfinding.GetPath(transform, movePos, tiles);
+
         gm.ResetTiles();
-        StartCoroutine(StartMovement(movePos));
+
+        if (path != null)
+            StartCoroutine(StartMovement(path));
     }
 
     void Attack(Unit enemy) {
@@ -246,16 +289,28 @@ public class Unit : MonoBehaviour
         }
     }
 
-    IEnumerator StartMovement(Transform movePos) { // Moves the character to his new position.
+    IEnumerator StartMovement(List<Vector2Int> path)
+    { // Moves the character to his new position.
 
+        // POR AHORA NO HACEMOS NADA
+        if (path.Count == 0)
+            yield break;
 
-        while (transform.position.x != movePos.position.x) { // first aligns him with the new tile's x pos
-            transform.position = Vector2.MoveTowards(transform.position, new Vector2(movePos.position.x, transform.position.y), moveSpeed * Time.deltaTime);
-            yield return null;
-        }
-        while (transform.position.y != movePos.position.y) // then y
-        {
-            transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, movePos.position.y), moveSpeed * Time.deltaTime);
+        int pathIndex = 0;
+
+        Vector2Int target = path[pathIndex];
+        Vector2Int objective = path[path.Count - 1];
+
+        while ((Vector2)transform.position != objective)
+        { // first aligns him with the new tile's x pos
+            transform.position = Vector2.MoveTowards(transform.position, target, moveSpeed * Time.deltaTime);
+
+            if ((Vector2)transform.position == path[pathIndex] && pathIndex + 1 < path.Count)
+            {
+                pathIndex++;
+                target = path[pathIndex];
+
+            }
             yield return null;
         }
 

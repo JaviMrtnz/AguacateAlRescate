@@ -6,6 +6,7 @@ public class AIBase : MonoBehaviour
 {
     public struct BattleAIInfo
     {
-        public GameObject player;
+        public Unit enemigo;
+        public List<Unit> enemiesInRange;
     }
 }
