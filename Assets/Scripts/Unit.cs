@@ -53,7 +53,7 @@ public class Unit : MonoBehaviour
     {
         if (isKing)
         {
-            displayedText.text = health.ToString();
+            //displayedText.text = health.ToString();
         }
     }
 
@@ -93,7 +93,7 @@ public class Unit : MonoBehaviour
                     if (!hasMoved)
                     {
                         Tile[] tiles = mGetWalkableTiles();
-                        Pathfinding.HighlightTiles(transform, ref tiles);
+                        //Pathfinding.HighlightTiles(transform, ref tiles);
                     }
 
                     //GetWalkableTiles();
@@ -195,12 +195,12 @@ public class Unit : MonoBehaviour
     {
 
         Tile[] tiles = mGetWalkableTiles();
-        List<Vector2Int> path = Pathfinding.GetPath(transform, movePos, tiles);
+        //List<Vector2Int> path = Pathfinding.GetPath(transform, movePos, tiles);
 
         gm.ResetTiles();
 
-        if (path != null)
-            StartCoroutine(StartMovement(path));
+        //if (path != null)
+          //  StartCoroutine(StartMovement(path));
     }
 
     void Attack(Unit enemy) {
