@@ -269,7 +269,6 @@ public class Unit : MonoBehaviour
     { // Moves the character to his new position.
 
         path = Pathfinding.FindPath(transform.position, moveTo.worldPosition);
-        // POR AHORA NO HACEMOS NADA
         if (path.Count == 0)
             yield break;
 
