@@ -39,10 +39,7 @@ public class Unit : MonoBehaviour
 
 	private AudioSource source;
 
-    public Text displayedText;
-
-    Node currentNode;
-    List<Vector3> path;
+    public Text displayedText; 
 
     private void Start()
     {
@@ -95,15 +92,8 @@ public class Unit : MonoBehaviour
 
                     if (!hasMoved)
                     {
-<<<<<<< HEAD
                         Tile[] tiles = mGetWalkableTiles();
                         //Pathfinding.HighlightTiles(transform, ref tiles);
-=======
-                        //Tile[] tiles = mGetWalkableTiles();
-                        //foreach (Tile tile in tiles)
-                        //    tile.Highlight();
-                        GetWalkableTiles();
->>>>>>> 6bd8e2cdef6dd80e6e972dbbe957adf39fbdd879
                     }
 
                     //GetWalkableTiles();
@@ -152,12 +142,35 @@ public class Unit : MonoBehaviour
             { // how far he can move
                 if (tile.isClear() == true)
                 { // is the tile clear from any obstacles
-                 tile.Highlight();
-                  
+                  //tile.Highlight();
+                    tile.isWalkable = true;
                 }
 
             }
         }
+    }
+
+    private Tile[] mGetWalkableTiles()
+    { // Looks for the tiles the unit can walk on
+        if (hasMoved == true)
+        {
+            return null;
+        }
+
+        Tile[] tiles = FindObjectsOfType<Tile>();
+        foreach (Tile tile in tiles)
+        {
+            if (Mathf.Abs(transform.position.x - tile.transform.position.x) + Mathf.Abs(transform.position.y - tile.transform.position.y) <= tileSpeed)
+            { // how far he can move
+                if (tile.isClear() == true)
+                { // is the tile clear from any obstacles
+                    tile.isWalkable = true;
+                }
+
+            }
+        }
+
+        return tiles;
     }
 
     void GetEnemies() {
@@ -178,10 +191,9 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public void Move(Node movePos)
+    public void Move(Transform movePos)
     {
 
-<<<<<<< HEAD
         Tile[] tiles = mGetWalkableTiles();
         //List<Vector2Int> path = Pathfinding.GetPath(transform, movePos, tiles);
 
@@ -189,9 +201,6 @@ public class Unit : MonoBehaviour
 
         //if (path != null)
           //  StartCoroutine(StartMovement(path));
-=======
-        StartCoroutine(StartMovement(movePos));
->>>>>>> 6bd8e2cdef6dd80e6e972dbbe957adf39fbdd879
     }
 
     void Attack(Unit enemy) {
@@ -280,49 +289,35 @@ public class Unit : MonoBehaviour
         }
     }
 
-    IEnumerator StartMovement(Node moveTo)
+    IEnumerator StartMovement(List<Vector2Int> path)
     { // Moves the character to his new position.
 
-        path = Pathfinding.FindPath(transform.position, moveTo.worldPosition);
         // POR AHORA NO HACEMOS NADA
         if (path.Count == 0)
             yield break;
 
-        Node lastNode = null;
-        if (path.Count > 0)
-        {
-            int steps = 0;
-            if (currentNode != null)
+        int pathIndex = 0;
+
+        Vector2Int target = path[pathIndex];
+        Vector2Int objective = path[path.Count - 1];
+
+        while ((Vector2)transform.position != objective)
+        { // first aligns him with the new tile's x pos
+            transform.position = Vector2.MoveTowards(transform.position, target, moveSpeed * Time.deltaTime);
+
+            if ((Vector2)transform.position == path[pathIndex] && pathIndex + 1 < path.Count)
             {
-                currentNode.walkable = true;
-                currentNode.hasUnit = false;
+                pathIndex++;
+                target = path[pathIndex];
+
             }
-
-            while (path.Count > 0 && steps < tileSpeed)
-            {
-                transform.position = Vector3.MoveTowards(transform.position, path[0], moveSpeed * Time.deltaTime);
-                gm.MoveInfoPanel(this);
-
-                if (transform.position == path[0])
-                {
-                    steps++;
-                    lastNode = Pathfinding.grid.NodeFromWorldPoint(path[0]);
-                    path.RemoveAt(0);
-                }
-
-                yield return null;
-            }
-        }
-        if (lastNode != null)
-        {
-            lastNode.walkable = false;
-            lastNode.hasUnit = true;
+            yield return null;
         }
 
-        currentNode = lastNode;
         hasMoved = true;
         ResetWeaponIcon();
         GetEnemies();
+        gm.MoveInfoPanel(this);
     }
 
 
