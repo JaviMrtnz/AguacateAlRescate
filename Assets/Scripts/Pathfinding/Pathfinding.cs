@@ -6,72 +6,118 @@ using System;
 
 public class Pathfinding : MonoBehaviour
 {
-   // PathRequestManager requestManager;
+    // PathRequestManager requestManager;
     public static Grid grid;
     //public Transform target;
 
     void Awake()
     {
-       
+
         grid = GetComponent<Grid>();
     }
 
-    //public void StartFindPath(Vector3 startPos, Vector3 targetPos)
-    //{
-    //    StartCoroutine(FindPath(startPos, targetPos));
-    //}
-
-    public static List<Vector3> FindPath(Vector3 startPos, Vector3 targetPos)
+    public void StartFindPath(Vector3 startPos, Vector3 targetPos)
     {
-        Vector3[] waypoints = new Vector3[0];
-        
+        //StartCoroutine(FindPath(startPos, targetPos));
+    }
 
+    public static List<Vector3> FindPathArchersKing(Vector3 startPos, Vector3 targetPos)
+    {
+        // Get positions as nodes
         Node startNode = grid.NodeFromWorldPoint(startPos);
         Node targetNode = grid.NodeFromWorldPoint(targetPos);
 
-        if (startNode.walkable && targetNode.walkable)
+        // Initialize the open and closed set
+        Heap<Node> openSet = new Heap<Node>(grid.MaxSize);
+        HashSet<Node> closedSet = new HashSet<Node>();
+
+        // Start the open set with the first node
+        openSet.Add(startNode);
+
+        // While there are nodes on the open set, keep looking for a route
+        while (openSet.Count > 0)
         {
-            Heap<Node> openSet = new Heap<Node>(grid.MaxSize);
-            HashSet<Node> closedSet = new HashSet<Node>();
-            openSet.Add(startNode);
+            Node currentNode = openSet.RemoveFirst();
+            closedSet.Add(currentNode);
 
-            while (openSet.Count > 0)
+            // Path found
+            if (currentNode == targetNode)
             {
-                Node currentNode = openSet.RemoveFirst();
-                closedSet.Add(currentNode);
+                return RetracePath(startNode, currentNode);
+            }
 
-                if (currentNode == targetNode)
+            foreach (Node neighbour in grid.GetNeighbours(currentNode))
+            {
+                if (neighbour.hasTree || !neighbour.walkable || closedSet.Contains(neighbour) || neighbour.hasUnit)
+                    continue;
+
+                float newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour) - currentNode.influenceCost;
+                if (newMovementCostToNeighbour < (neighbour.gCost + neighbour.tacticalCost) || !openSet.Contains(neighbour))
                 {
+                    neighbour.gCost = (int)newMovementCostToNeighbour;
+                    neighbour.hCost = GetDistance(neighbour, targetNode);
+                    neighbour.parent = currentNode;
 
-                    return RetracePath(startNode, currentNode);
-                }
+                    //UnityEngine.Debug.Log(neighbour.influenceCost);
 
-                foreach (Node neighbour in grid.GetNeighbours(currentNode))
-                {
-                    if (!neighbour.walkable || closedSet.Contains(neighbour))
-                    {
-                        continue;
-                    }
-
-                    int newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour);
-                    if (newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
-                    {
-                        neighbour.gCost = newMovementCostToNeighbour;
-                        neighbour.hCost = GetDistance(neighbour, targetNode);
-                        neighbour.parent = currentNode;
-
-                        if (!openSet.Contains(neighbour))
-                        {
-                            openSet.Add(neighbour);
-
-                        }
-                    }
+                    if (!openSet.Contains(neighbour))
+                        openSet.Add(neighbour);
                 }
             }
         }
+
+        // No path found, return empty list
         return new List<Vector3>();
-        
-        
+    }
+
+    public static List<Vector3> FindPathKnightsDragons(Vector3 startPos, Vector3 targetPos)
+    {
+        // Get positions as nodes
+        Node startNode = grid.NodeFromWorldPoint(startPos);
+        Node targetNode = grid.NodeFromWorldPoint(targetPos);
+
+        // Initialize the open and closed set
+        Heap<Node> openSet = new Heap<Node>(grid.MaxSize);
+        HashSet<Node> closedSet = new HashSet<Node>();
+
+        // Start the open set with the first node
+        openSet.Add(startNode);
+
+        // While there are nodes on the open set, keep looking for a route
+        while (openSet.Count > 0)
+        {
+            Node currentNode = openSet.RemoveFirst();
+            closedSet.Add(currentNode);
+
+            // Path found
+            if (currentNode == targetNode)
+            {
+                return RetracePath(startNode, currentNode);
+            }
+
+            foreach (Node neighbour in grid.GetNeighbours(currentNode))
+            {
+                if (!neighbour.walkable || closedSet.Contains(neighbour) || neighbour.hasUnit)
+                    continue;
+
+                float newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour) - currentNode.tacticalCost;
+                //UnityEngine.Debug.Log(currentNode.tacticalCost);
+                if (newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
+                {
+                    neighbour.gCost = (int)newMovementCostToNeighbour;
+                    neighbour.hCost = GetDistance(neighbour, targetNode);
+                    neighbour.parent = currentNode;
+
+                    //UnityEngine.Debug.Log(neighbour.influenceCost);
+
+                    if (!openSet.Contains(neighbour))
+                        openSet.Add(neighbour);
+                }
+            }
+        }
+
+        // No path found, return empty list
+        return new List<Vector3>();
     }
 
     static List<Vector3> RetracePath(Node startNode, Node endNode)
@@ -90,33 +136,16 @@ public class Pathfinding : MonoBehaviour
 
     }
 
-    Vector3[] SimplifyPath(List<Node> path)
-    {
-        List<Vector3> waypoints = new List<Vector3>();
-        Vector2 directionOld = Vector2.zero;
-
-        for (int i = 1; i < path.Count; i++)
-        {
-            Vector2 directionNew = new Vector2(path[i - 1].gridX - path[i].gridX, path[i - 1].gridY - path[i].gridY);
-            if (directionNew != directionOld)
-            {
-                waypoints.Add(path[i-1].worldPosition);
-            }
-            directionOld = directionNew;
-        }
-        return waypoints.ToArray();
-    }
-
-    static int  GetDistance(Node nodeA, Node nodeB)
+    public static int GetDistance(Node nodeA, Node nodeB)
     {
         int dstX = Mathf.Abs(nodeA.gridX - nodeB.gridX);
         int dstY = Mathf.Abs(nodeA.gridY - nodeB.gridY);
 
         if (dstX > dstY)
         {
-            return 14 * dstY + 10 * (dstX - dstY);
+            return 2000 * dstY + 10 * (dstX - dstY);
         }
-        return 14 * dstX + 10 * (dstY - dstX);
-    }
 
+        return 2000 * dstX + 10 * (dstY - dstX);
+    }
 }

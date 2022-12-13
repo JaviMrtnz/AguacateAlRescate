@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.03674078, y: -0.013177633, z: 4.5277877}
   m_LocalScale: {x: 0.18988246, y: 0.13177028, z: 0.18951233}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1642533359335901392}
   m_RootOrder: 1
@@ -42,9 +43,12 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -97,7 +101,7 @@ GameObject:
   - component: {fileID: 2057758935}
   m_Layer: 9
   m_Name: Dark Bat
-  m_TagString: Untagged
+  m_TagString: Dragon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -112,6 +116,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 6, y: 0, z: -4.5277877}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1642533359395298476}
   - {fileID: 1642533359225339582}
@@ -121,7 +126,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1642533359335901393
 Animator:
-  serializedVersion: 3
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -134,6 +139,7 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -169,6 +175,7 @@ MonoBehaviour:
   deathEffect: {fileID: 8882834092664154197, guid: 43e58a09770a414488a4edf9a2bb5ea7,
     type: 3}
   isKing: 0
+  displayedText: {fileID: 0}
 --- !u!61 &1642533359335901399
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -331,6 +338,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0.1666242, w: 0.9860205}
   m_LocalPosition: {x: -0.006, y: 0.324, z: 4.5277877}
   m_LocalScale: {x: 0.13516892, y: 0.13516892, z: 0.13516892}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1642533359335901392}
   m_RootOrder: 0
@@ -346,9 +354,12 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -411,6 +422,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.8533874, y: 1.0667362, z: 0}
   m_LocalScale: {x: -1.0329226, y: 1.0200111, z: 1.0329225}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1642533359795958548}
   m_RootOrder: 1
@@ -426,9 +438,12 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -492,6 +507,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.008999825, y: 0.155, z: 4.527788}
   m_LocalScale: {x: 0.2531085, y: 0.2531085, z: 0.2531085}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1642533360139370760}
   - {fileID: 1642533359760755087}
@@ -509,9 +525,12 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -575,6 +594,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.92450553, y: 1.0667362, z: 0}
   m_LocalScale: {x: 1.0329225, y: 1.0200111, z: 1.0329225}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1642533359795958548}
   m_RootOrder: 0
@@ -590,9 +610,12 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

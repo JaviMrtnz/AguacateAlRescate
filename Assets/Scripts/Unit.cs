@@ -69,7 +69,6 @@ public class Unit : MonoBehaviour
             
             if (isSelected == true)
             {
-
                 isSelected = false;
                 gm.selectedUnit = null;
                 gm.ResetTiles();
@@ -93,21 +92,14 @@ public class Unit : MonoBehaviour
                         source.Play();
                     }
 
-                    if (!hasMoved)
-                    {
-                        //Tile[] tiles = mGetWalkableTiles();
-                        //foreach (Tile tile in tiles)
-                        //    tile.Highlight();
+                    if (this.tag == "Knight" || this.tag == "Dragon")
+                        GetWalkableTilesKnightDragon();
+                    else
                         GetWalkableTiles();
-                    }
-
-                    //GetWalkableTiles();
                     GetEnemies();
                 }
 
             }
-
-
 
             Collider2D col = Physics2D.OverlapCircle(Camera.main.ScreenToWorldPoint(Input.mousePosition), 0.15f);
             if (col != null)
@@ -133,7 +125,7 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public void GetWalkableTiles()
+    void GetWalkableTiles()
     { // Looks for the tiles the unit can walk on
         if (hasMoved == true)
         {
@@ -149,6 +141,28 @@ public class Unit : MonoBehaviour
                 { // is the tile clear from any obstacles
                  tile.Highlight();
                   
+                }
+
+            }
+        }
+    }
+    //Esta funcion hay que mirarla 
+    void GetWalkableTilesKnightDragon()
+    { // Looks for the tiles the unit can walk on
+        if (hasMoved == true)
+        {
+            return;
+        }
+
+        //Debug.Log("Get tiles");
+        Tile[] tiles = FindObjectsOfType<Tile>();
+        foreach (Tile tile in tiles)
+        {
+            if (Mathf.Abs(transform.position.x - tile.transform.position.x) + Mathf.Abs(transform.position.y - tile.transform.position.y) <= tileSpeed + 0.5f)
+            { // how far he can move
+                if (tile.isClearKnight() == true)
+                { // is the tile clear from any obstacles
+                    tile.Highlight();
                 }
 
             }
@@ -175,7 +189,7 @@ public class Unit : MonoBehaviour
 
     public void Move(Node movePos)
     {
-
+        gm.ResetTiles();
         StartCoroutine(StartMovement(movePos));
     }
 
@@ -265,12 +279,14 @@ public class Unit : MonoBehaviour
         }
     }
 
-    IEnumerator StartMovement(Node moveTo)
+    public IEnumerator StartMovement(Node moveTo)
     { // Moves the character to his new position.
 
-        path = Pathfinding.FindPath(transform.position, moveTo.worldPosition);
-        if (path.Count == 0)
-            yield break;
+        if (transform.tag == "Knight" || transform.tag == "Dragon")
+            path = Pathfinding.FindPathKnightsDragons(transform.position, moveTo.worldPosition);
+        else
+            path = Pathfinding.FindPathArchersKing(transform.position, moveTo.worldPosition);
+
 
         Node lastNode = null;
         if (path.Count > 0)
@@ -297,6 +313,73 @@ public class Unit : MonoBehaviour
                 yield return null;
             }
         }
+
+
+        if (lastNode != null)
+        {
+            lastNode.walkable = false;
+            lastNode.hasUnit = true;
+        }
+
+        currentNode = lastNode;
+        hasMoved = true;
+        ResetWeaponIcon();
+        GetEnemies();
+    }
+
+    public IEnumerator StartMovementArcher(Node moveTo)
+    { // Moves the character to his new position.
+
+        path = Pathfinding.FindPathArchersKing(transform.position, moveTo.worldPosition);
+
+        Node lastNode = null;
+
+        if (path.Count > 0)
+        {
+            int steps = 0;
+            if (currentNode != null)
+            {
+                currentNode.walkable = true;
+                currentNode.hasUnit = false;
+            }
+
+            Vector3 last = new Vector3();
+            Vector3 lastlast = new Vector3();
+
+            foreach (Vector3 node in path)
+            {
+                lastlast = last;
+                last = node;
+            }
+
+            List<Node> neighbors = Pathfinding.grid.GetNeighbours(Pathfinding.grid.NodeFromWorldPoint(last));
+
+            foreach (Node node in neighbors)
+            {
+                if (Pathfinding.grid.NodeFromWorldPoint(lastlast).walkable && !node.hasUnit)
+                {
+                    path.Remove(last);
+                    break;
+                }
+            }
+
+            while (path.Count > 0 && steps < tileSpeed)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, path[0], moveSpeed * Time.deltaTime);
+                gm.MoveInfoPanel(this);
+
+                if (transform.position == path[0])
+                {
+                    steps++;
+                    lastNode = Pathfinding.grid.NodeFromWorldPoint(path[0]);
+                    path.RemoveAt(0);
+                }
+
+                yield return null;
+            }
+
+        }
+
         if (lastNode != null)
         {
             lastNode.walkable = false;

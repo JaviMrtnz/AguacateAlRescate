@@ -7,6 +7,8 @@ TagManager:
   - Archer
   - infoPanel
   - unitParent
+  - Dragon
+  - Knight
   layers:
   - Default
   - TransparentFX
