@@ -51,14 +51,14 @@ public class Pathfinding : MonoBehaviour
                 if (neighbour.hasTree || !neighbour.walkable || closedSet.Contains(neighbour) || neighbour.hasUnit)
                     continue;
 
-                float newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour) - currentNode.influenceCost;
-                if (newMovementCostToNeighbour < (neighbour.gCost + neighbour.tacticalCost) || !openSet.Contains(neighbour))
+                float newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour);
+                if (newMovementCostToNeighbour < neighbour.gCost  || !openSet.Contains(neighbour))
                 {
                     neighbour.gCost = (int)newMovementCostToNeighbour;
                     neighbour.hCost = GetDistance(neighbour, targetNode);
                     neighbour.parent = currentNode;
 
-                    //UnityEngine.Debug.Log(neighbour.influenceCost);
+                    
 
                     if (!openSet.Contains(neighbour))
                         openSet.Add(neighbour);
@@ -100,15 +100,15 @@ public class Pathfinding : MonoBehaviour
                 if (!neighbour.walkable || closedSet.Contains(neighbour) || neighbour.hasUnit)
                     continue;
 
-                float newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour) - currentNode.tacticalCost;
-                //UnityEngine.Debug.Log(currentNode.tacticalCost);
+                float newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour) ;
+                
                 if (newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
                 {
                     neighbour.gCost = (int)newMovementCostToNeighbour;
                     neighbour.hCost = GetDistance(neighbour, targetNode);
                     neighbour.parent = currentNode;
 
-                    //UnityEngine.Debug.Log(neighbour.influenceCost);
+                   
 
                     if (!openSet.Contains(neighbour))
                         openSet.Add(neighbour);

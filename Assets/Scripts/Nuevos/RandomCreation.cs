@@ -90,13 +90,13 @@ public class RandomCreation : MonoBehaviour
                 Debug.Log(currentNode.gridY);
                 currentNode.walkable = false;
                 currentNode.hasTree = true;
-                currentNode.tacticalCost = 10;
+                
             }
 
             else
             {
                 currentNode = Pathfinding.grid.NodeFromWorldPoint(spawntreepoints[rand].transform.position);
-                currentNode.tacticalCost = 0f;
+                
             }
 
             spawntreepoints.RemoveAt(rand);

@@ -13,8 +13,7 @@ public class Node : IHeapItem<Node>
 
     public int gCost;
     public int hCost;
-    public float tacticalCost;
-    public float influenceCost;
+
     public Node parent;
     int heapIndex;
 
