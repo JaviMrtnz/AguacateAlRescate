@@ -9,8 +9,10 @@ public class GM : MonoBehaviour
     public Unit selectedUnit;
 
     public int playerTurn = 1;
+   
 
     public Transform selectedUnitSquare;
+    public enemyController enemyController;
 
 
     private Animator camAnim;
@@ -44,12 +46,14 @@ public class GM : MonoBehaviour
     {
 		source = GetComponent<AudioSource>();
         camAnim = Camera.main.GetComponent<Animator>();
+       // enemyController = GetComponent<enemyController>();
         GetGoldIncome(1);
+
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown("b")) {
+        if (Input.GetKeyDown(KeyCode.Space) && playerTurn == 1) {
             EndTurn();
         }
 
@@ -62,8 +66,10 @@ public class GM : MonoBehaviour
         {
             selectedUnitSquare.gameObject.SetActive(false);
         }
-
+       
     }
+
+    
 
     // Sets panel active/inactive and moves it to the correct place
     public void UpdateInfoPanel(Unit unit) {
@@ -151,6 +157,10 @@ public class GM : MonoBehaviour
         GetGoldIncome(playerTurn);
         GetComponent<CharacterCreation>().CloseCharacterCreationMenus();
         createdUnit = null;
+        if (playerTurn == 2)
+        {
+            StartCoroutine(enemyController.enemyTurn());
+        }
     }
 
     void GetGoldIncome(int playerTurn) {

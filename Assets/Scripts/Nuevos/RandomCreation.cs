@@ -81,12 +81,14 @@ public class RandomCreation : MonoBehaviour
         {
             rand = Random.Range(0, spawntreepoints.Count);
             int rand2 = Random.Range(0, trees.Length);
-            Instantiate(trees[rand2], spawntreepoints[rand].transform.position, Quaternion.identity, unitParent.transform);
+            Instantiate(trees[0], spawntreepoints[rand].transform.position, Quaternion.identity, unitParent.transform);
 
             if (rand2 != 3 && rand2 != 4 && rand2 != 5)
             {
                 currentNode = Pathfinding.grid.NodeFromWorldPoint(spawntreepoints[rand].transform.position);
-                //currentNode.walkable = false;
+                Debug.Log(currentNode.gridX);
+                Debug.Log(currentNode.gridY);
+                currentNode.walkable = false;
                 currentNode.hasTree = true;
                 currentNode.tacticalCost = 10;
             }
