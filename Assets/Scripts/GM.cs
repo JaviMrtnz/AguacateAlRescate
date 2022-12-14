@@ -53,7 +53,7 @@ public class GM : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && playerTurn == 1) {
+        if (Input.GetKeyDown(KeyCode.Space)) {
             EndTurn();
         }
 

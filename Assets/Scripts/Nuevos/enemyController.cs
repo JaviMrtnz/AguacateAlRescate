@@ -9,16 +9,8 @@ public class enemyController : MonoBehaviour
 
     public List<Unit> iaUnits = new List<Unit>();
     public List<Unit> playerUnits = new List<Unit>();
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
     public IEnumerator enemyTurn()
     {
         getAllUnits();
