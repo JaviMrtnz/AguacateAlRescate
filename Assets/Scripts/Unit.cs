@@ -12,6 +12,7 @@ public class Unit : MonoBehaviour
     public float moveSpeed;
 
     private GM gm;
+    public static Grid grid;
 
     public int attackRadius;
     public bool hasAttacked;
@@ -49,6 +50,7 @@ public class Unit : MonoBehaviour
 		source = GetComponent<AudioSource>();
 		camAnim = Camera.main.GetComponent<Animator>();
         gm = FindObjectOfType<GM>();
+        grid = GetComponent<Grid>();
         UpdateHealthDisplay();
     }
 
@@ -92,10 +94,7 @@ public class Unit : MonoBehaviour
                         source.Play();
                     }
 
-                    if (this.tag == "Knight" || this.tag == "Dragon")
-                        GetWalkableTilesKnightDragon();
-                    else
-                        GetWalkableTiles();
+                    GetWalkableTiles();
                     GetEnemies();
                 }
 
@@ -134,40 +133,42 @@ public class Unit : MonoBehaviour
 
         Tile[] tiles = FindObjectsOfType<Tile>();
         foreach (Tile tile in tiles)
-        {
-            if (Mathf.Abs(transform.position.x - tile.transform.position.x) + Mathf.Abs(transform.position.y - tile.transform.position.y) <= tileSpeed)
-            { // how far he can move
-                if (tile.isClear() == true)
-                { // is the tile clear from any obstacles
-                 tile.Highlight();
+        {        
+                if (Mathf.Abs(transform.position.x - tile.transform.position.x) + Mathf.Abs(transform.position.y - tile.transform.position.y) <= tileSpeed + 0.5f)
+                { // how far he can move
+                    if (tile.isClear() == true)
+                    { // is the tile clear from any obstacles
+                     tile.Highlight();
                   
-                }
-
-            }
+                    }
+                }          
         }
     }
-    //Esta funcion hay que mirarla 
-    void GetWalkableTilesKnightDragon()
+
+    public List<Node> nGetWalkableTiles()
     { // Looks for the tiles the unit can walk on
         if (hasMoved == true)
         {
-            return;
+            return null;
         }
 
-        //Debug.Log("Get tiles");
         Tile[] tiles = FindObjectsOfType<Tile>();
+        List<Node> nodes = new List<Node>();
         foreach (Tile tile in tiles)
         {
             if (Mathf.Abs(transform.position.x - tile.transform.position.x) + Mathf.Abs(transform.position.y - tile.transform.position.y) <= tileSpeed + 0.5f)
             { // how far he can move
-                if (tile.isClearKnight() == true)
+                if (tile.isClear() == true)
                 { // is the tile clear from any obstacles
                     tile.Highlight();
+                    nodes.Add(tile.node);
                 }
-
             }
         }
+        return nodes;
     }
+    //Esta funcion hay que mirarla 
+    
 
     void GetEnemies() {
     

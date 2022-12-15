@@ -46,7 +46,7 @@ public class GM : MonoBehaviour
     {
 		source = GetComponent<AudioSource>();
         camAnim = Camera.main.GetComponent<Animator>();
-       // enemyController = GetComponent<enemyController>();
+        enemyController = FindObjectOfType<enemyController>();
         GetGoldIncome(1);
 
     }
@@ -161,6 +161,24 @@ public class GM : MonoBehaviour
         {
             StartCoroutine(enemyController.enemyTurn());
         }
+    }
+
+    public List<Unit> checkEnemies(Node node)
+    {
+        List<Unit> enemiesInRange = new List<Unit>();
+        Debug.Log("se ralla aqui");
+        Unit[] enemies = FindObjectsOfType<Unit>();
+        foreach (Unit enemy in enemies)
+        {
+            if (Mathf.Abs(node.worldPosition.x - enemy.transform.position.x) + Mathf.Abs(node.worldPosition.y - enemy.transform.position.y) <= selectedUnit.attackRadius) 
+            {
+                if (enemy.playerNumber != playerTurn && !selectedUnit.hasAttacked)
+                {
+                    enemiesInRange.Add(enemy);
+                }
+            }
+        }
+        return enemiesInRange;
     }
 
     void GetGoldIncome(int playerTurn) {
