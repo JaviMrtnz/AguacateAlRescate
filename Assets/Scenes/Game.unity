@@ -9556,7 +9556,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d28cc2e90a9ea046b8fa520dceefded, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gm: {fileID: 1570414220}
+  gm: {fileID: 1570414219}
+  gmScript: {fileID: 1570414220}
   iaUnits: []
   playerUnits: []
 --- !u!4 &560751666

@@ -5,6 +5,8 @@ using UnityEngine;
 public class enemyController : MonoBehaviour
 {
 
+    
+
     public GameObject gm;
     public GM gmScript;
 
@@ -13,10 +15,10 @@ public class enemyController : MonoBehaviour
 
     public void Start()
     {
-        //gm = FindObjectOfType<GM>();
+        
         //gm = GetComponent<GM>();
-        gm = GameObject.Find("GameMaster");
-        gmScript = gm.GetComponent<GM>();
+        //gm = GameObject.Find("GameMaster");
+        //gmScript = gm.GetComponent<GM>();
 
     }
 

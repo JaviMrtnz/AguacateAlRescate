@@ -223,3 +223,6 @@ public class GM : MonoBehaviour
 
 
 }
+
+// El problema esta en que selectedUnit no tiene nunca una unidad seleccionada, por eso da el error, hay que mirarlo 
+
