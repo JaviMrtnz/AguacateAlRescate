@@ -30,9 +30,7 @@ public class RandomCreation : MonoBehaviour
 
         int rand = Random.Range(0, spawnpoints.Count);
         Instantiate(king, spawnpoints[rand].transform.position, Quaternion.identity, unitParent.transform);
-        Debug.Log(spawnpoints[rand].transform.position);
         currentNode = Pathfinding.grid.NodeFromWorldPoint(spawnpoints[rand].transform.position);
-        Debug.Log(currentNode);
         currentNode.walkable = false;
         currentNode.hasUnit = true;
         spawnpoints.RemoveAt(rand);
@@ -86,8 +84,8 @@ public class RandomCreation : MonoBehaviour
             if (rand2 != 3 && rand2 != 4 && rand2 != 5)
             {
                 currentNode = Pathfinding.grid.NodeFromWorldPoint(spawntreepoints[rand].transform.position);
-                Debug.Log(currentNode.gridX);
-                Debug.Log(currentNode.gridY);
+                //Debug.Log(currentNode.gridX);
+                //Debug.Log(currentNode.gridY);
                 currentNode.walkable = false;
                 currentNode.hasTree = true;
                 

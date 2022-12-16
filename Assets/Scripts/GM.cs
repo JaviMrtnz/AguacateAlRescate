@@ -166,7 +166,7 @@ public class GM : MonoBehaviour
     public List<Unit> checkEnemies(Node node)
     {
         List<Unit> enemiesInRange = new List<Unit>();
-        Debug.Log("se ralla aqui");
+        //Debug.Log("se ralla aqui");
         Unit[] enemies = FindObjectsOfType<Unit>();
         foreach (Unit enemy in enemies)
         {

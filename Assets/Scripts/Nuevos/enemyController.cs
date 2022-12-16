@@ -12,20 +12,20 @@ public class enemyController : MonoBehaviour
 
     public void Start()
     {
-        
+
         //gm = GetComponent<GM>();
         //gm = GameObject.Find("GameMaster");
         //gmScript = gm.GetComponent<GM>();
+
 
     }
 
 
     public IEnumerator enemyTurn()
     {
+
         getAllUnits();
-
-        //Debug.Log("corutinea");
-
+ 
         
         foreach (Unit unit in iaUnits)
         {
@@ -45,7 +45,7 @@ public class enemyController : MonoBehaviour
        
     }
 
-    private void getAllUnits()
+    public void getAllUnits()
     {
         iaUnits.Clear();
         playerUnits.Clear();
@@ -55,6 +55,7 @@ public class enemyController : MonoBehaviour
         {
             if (enemy.playerNumber == 2)
             {
+                
                 iaUnits.Add(enemy);
             }
             else
@@ -66,6 +67,7 @@ public class enemyController : MonoBehaviour
 
     Node checkNodeScore(Unit unit)
     {
+        
         int maxScore = 0;
         int currentScore = 0;
         float currentDistance = 0;
@@ -79,7 +81,7 @@ public class enemyController : MonoBehaviour
 
         foreach(Node node in walkableNodes)
         {
-            Debug.Log(node.worldPosition.x);
+            //Debug.Log(node.worldPosition.x);
             currentScore = 0;
             enemyNumber = gmScript.checkEnemies(node);
            
@@ -88,18 +90,17 @@ public class enemyController : MonoBehaviour
                 //no hay enemigos alrededor de la casilla
                 foreach (Unit playerEnemy in playerUnits)
                 {
-                    Debug.Log("entra al foreach");
+                    //Debug.Log("entra al foreach");
                     if (playerEnemy.health <= unit.attackDamage)
                     {
-                        currentDistance = Mathf.Abs(node.worldPosition.x - playerEnemy.currentNode.worldPosition.x) + Mathf.Abs(node.worldPosition.y - playerEnemy.currentNode.worldPosition.y);
-                        Debug.Log(node.worldPosition.x);
-                        Debug.Log(playerEnemy.currentNode.worldPosition.x);
+                        currentDistance = Mathf.Abs(node.worldPosition.x - playerEnemy.transform.position.x) + Mathf.Abs(node.worldPosition.y - playerEnemy.transform.position.y);
+                        Debug.Log(playerEnemy);
                     }
-                    //else
-                    //{
-                    //    if (playerEnemy.isKing)
-                    //        currentDistance = Mathf.Abs(node.worldPosition.x - playerEnemy.currentNode.worldPosition.x) + Mathf.Abs(node.worldPosition.y - playerEnemy.currentNode.worldPosition.y);
-                    //}
+                    else
+                    {
+                        if (playerEnemy.isKing)
+                            currentDistance = Mathf.Abs(node.worldPosition.x - playerEnemy.transform.position.x) + Mathf.Abs(node.worldPosition.y - playerEnemy.transform.position.y);
+                    }
                     if (currentDistance <= minDistance)
                     {
                         minDistance = currentDistance;
