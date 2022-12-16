@@ -5,9 +5,6 @@ using UnityEngine;
 public class enemyController : MonoBehaviour
 {
 
-    
-
-    public GameObject gm;
     public GM gmScript;
 
     public List<Unit> iaUnits = new List<Unit>();
@@ -26,22 +23,26 @@ public class enemyController : MonoBehaviour
     public IEnumerator enemyTurn()
     {
         getAllUnits();
-        //Debug.Log("corutinea");
-        
 
-        foreach(Unit unit in iaUnits)
+        //Debug.Log("corutinea");
+
+        
+        foreach (Unit unit in iaUnits)
         {
-            //if (gm.selectedUnit != null)
-            //{ 
-            //    gm.selectedUnit.isSelected = false;
-            //}
+
+            yield return new WaitForSeconds(1);
+            if (gmScript.selectedUnit != null)
+            {
+                gmScript.selectedUnit.isSelected = false;
+            }
+            gmScript.selectedUnit = unit;
 
             //metodo pa seleccionar donde mover la unidad
             Node posicion = checkNodeScore(unit);
             unit.Move(posicion);
             
         }
-        yield return new WaitForSeconds(1);
+       
     }
 
     private void getAllUnits()
@@ -67,6 +68,8 @@ public class enemyController : MonoBehaviour
     {
         int maxScore = 0;
         int currentScore = 0;
+        float currentDistance = 0;
+        float minDistance = 500;
         List<Unit> enemyNumber = new List<Unit>();
         Node bestNode = null;
         
@@ -76,23 +79,41 @@ public class enemyController : MonoBehaviour
 
         foreach(Node node in walkableNodes)
         {
+            Debug.Log(node.worldPosition.x);
             currentScore = 0;
             enemyNumber = gmScript.checkEnemies(node);
            
-
-
-            if (enemyNumber.Count == 1)
-                currentScore = 20;
-            if (enemyNumber.Count > 1)
-                currentScore = 70;
-            if (enemyNumber.Count == 0)
-                currentScore = 50;
-            if (currentScore >= maxScore)
+            if(enemyNumber.Count == 0)
             {
-                maxScore = currentScore;
-                bestNode = node;
-
+                //no hay enemigos alrededor de la casilla
+                foreach (Unit playerEnemy in playerUnits)
+                {
+                    Debug.Log("entra al foreach");
+                    if (playerEnemy.health <= unit.attackDamage)
+                    {
+                        currentDistance = Mathf.Abs(node.worldPosition.x - playerEnemy.currentNode.worldPosition.x) + Mathf.Abs(node.worldPosition.y - playerEnemy.currentNode.worldPosition.y);
+                        Debug.Log(node.worldPosition.x);
+                        Debug.Log(playerEnemy.currentNode.worldPosition.x);
+                    }
+                    //else
+                    //{
+                    //    if (playerEnemy.isKing)
+                    //        currentDistance = Mathf.Abs(node.worldPosition.x - playerEnemy.currentNode.worldPosition.x) + Mathf.Abs(node.worldPosition.y - playerEnemy.currentNode.worldPosition.y);
+                    //}
+                    if (currentDistance <= minDistance)
+                    {
+                        minDistance = currentDistance;
+                        bestNode = node;
+                    }
+                }
+                
             }
+            //else
+            //{
+            //    //hay enemigos alrededor de la casilla
+
+            //}
+
         }
         return bestNode;
     }

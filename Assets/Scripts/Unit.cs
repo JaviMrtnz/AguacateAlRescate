@@ -42,7 +42,7 @@ public class Unit : MonoBehaviour
 
     public Text displayedText;
 
-    Node currentNode;
+    public Node currentNode;
     List<Vector3> path;
 
     private void Start()
