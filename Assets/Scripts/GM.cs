@@ -53,7 +53,8 @@ public class GM : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        
+        if (Input.GetKeyDown(KeyCode.Space) && playerTurn ==1) {
             EndTurn();
         }
 
@@ -126,7 +127,7 @@ public class GM : MonoBehaviour
         }
     }
 
-    void EndTurn() {
+    public void EndTurn() {
 		source.Play();
         camAnim.SetTrigger("shake");
 
