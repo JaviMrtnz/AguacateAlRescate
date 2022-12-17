@@ -181,6 +181,24 @@ public class GM : MonoBehaviour
         return enemiesInRange;
     }
 
+    public List<Unit> checkAllies(Node node)
+    {
+        List<Unit> enemiesInRange = new List<Unit>();
+        //Debug.Log("se ralla aqui");
+        Unit[] enemies = FindObjectsOfType<Unit>();
+        foreach (Unit enemy in enemies)
+        {
+            if (Mathf.Abs(node.worldPosition.x - enemy.transform.position.x) + Mathf.Abs(node.worldPosition.y - enemy.transform.position.y) <= selectedUnit.attackRadius)
+            {
+                if (enemy.playerNumber == playerTurn && !selectedUnit.hasAttacked)
+                {
+                    enemiesInRange.Add(enemy);
+                }
+            }
+        }
+        return enemiesInRange;
+    }
+
     void GetGoldIncome(int playerTurn) {
         foreach (Village village in FindObjectsOfType<Village>())
         {

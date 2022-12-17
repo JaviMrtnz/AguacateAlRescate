@@ -69,10 +69,12 @@ public class enemyController : MonoBehaviour
     {
         
         int maxScore = 0;
-        int currentScore = 0;
         float currentDistance = 0;
         float minDistance = 500;
-        List<Unit> enemyNumber = new List<Unit>();
+        int enemyDamage;
+        int unitDamage;
+        List<Unit> enemyUnits = new List<Unit>();
+        List<Unit> alliedUnits = new List<Unit>();
         Node bestNode = null;
         
 
@@ -82,38 +84,88 @@ public class enemyController : MonoBehaviour
         foreach(Node node in walkableNodes)
         {
             //Debug.Log(node.worldPosition.x);
-            currentScore = 0;
-            enemyNumber = gmScript.checkEnemies(node);
-           
-            if(enemyNumber.Count == 0)
+            int currentScore = 0;
+            enemyUnits = gmScript.checkEnemies(node);
+            alliedUnits = gmScript.checkAllies(node);
+
+            if (enemyUnits.Count == 0)
             {
                 //no hay enemigos alrededor de la casilla
                 foreach (Unit playerEnemy in playerUnits)
                 {
-                    //Debug.Log("entra al foreach");
-                    if (playerEnemy.health <= unit.attackDamage)
+                    enemyDamage = unit.attackDamage - playerEnemy.armor;
+                    if (playerEnemy.health <= enemyDamage)
                     {
                         currentDistance = Mathf.Abs(node.worldPosition.x - playerEnemy.transform.position.x) + Mathf.Abs(node.worldPosition.y - playerEnemy.transform.position.y);
-                        Debug.Log(playerEnemy);
+                        Debug.Log(currentDistance + "tropa");
+
                     }
                     else
                     {
                         if (playerEnemy.isKing)
                             currentDistance = Mathf.Abs(node.worldPosition.x - playerEnemy.transform.position.x) + Mathf.Abs(node.worldPosition.y - playerEnemy.transform.position.y);
+                        Debug.Log(currentDistance + "rey");
+
                     }
-                    if (currentDistance <= minDistance)
+                    if (currentDistance <= minDistance && currentDistance > 0)
                     {
                         minDistance = currentDistance;
                         bestNode = node;
+                        
                     }
                 }
-                
             }
-            //else
-            //{
-            //    //hay enemigos alrededor de la casilla
+            else if (enemyUnits.Count == 1)
+            {
+                //hay un enemigo
+                unitDamage = enemyUnits[0].defenseDamage - unit.armor;
+                enemyDamage = unit.attackDamage - enemyUnits[0].armor;
+                //lo puedo matar
+                if (enemyUnits[0].health <= enemyDamage)
+                {
+                    currentScore = 50;
+                }
+                //se queda vivo pero tocado
+                else if (unitDamage <= enemyDamage)
+                {
+                    currentScore = 20;
+                }
+                //es el rey, a muerte
+                else if (enemyUnits[0].isKing)
+                {
+                    currentScore = 30;
+                }
+                //malisimo
+                else currentScore = 1;
+            }
+            else if (enemyUnits.Count > 1)
+            {
+                
+                //hay enemigos alrededor de la casilla
+                foreach (Unit playerEnemy in enemyUnits)
+                {
+                    enemyDamage = unit.attackDamage - playerEnemy.armor;
+                    // unitDamage = playerEnemy.defenseDamage - unit.armor;
+                    //tiene poca vida y puede morir
+                    if (playerEnemy.health <= enemyDamage)
+                    {
+                        currentScore = 50;
+                    }
+                }
+            }
+            //más aliados que enemigos
+            if (alliedUnits.Count >= enemyUnits.Count)
+            {
+                currentScore += alliedUnits.Count;
+            }
+            //más enemigos, corred insensatos
+            else currentScore = 1;
 
-            //}
+            if (currentScore >= maxScore)
+            {
+                maxScore = currentScore;
+                bestNode = node;
+            }
 
         }
         return bestNode;
