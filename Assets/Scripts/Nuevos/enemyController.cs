@@ -25,6 +25,7 @@ public class enemyController : MonoBehaviour
         foreach (Unit unit in iaUnits)
         {
             getPlayerUnits();
+
             yield return new WaitForSeconds(1);
             if (gmScript.selectedUnit != null)
             {
@@ -34,8 +35,6 @@ public class enemyController : MonoBehaviour
 
             //metodo pa seleccionar donde mover la unidad
             Node posicion = checkNodeScore(unit);
-            
-
 
 
             if (!unit.hasMoved)
@@ -52,19 +51,7 @@ public class enemyController : MonoBehaviour
                 if (enemies.Count > 0)
                 {
                     unit.Attack(enemies[0]);
-                    if(enemies[0].health <= 0)
-                    {
-                        //Hay que intentar quitar de playerUnits el monigote que ha eliminado si no da error en la linea de comprobar la
-                        //distancia con los enemigos linea 129
-                        foreach(Unit enemigo in playerUnits.ToArray())
-                        {
-                            if(enemies[0]== enemigo)
-                            {
-                                playerUnits.Remove(enemigo);
-                            }
-                        }
-                        
-                    }
+                   
                 }
             }
 
@@ -107,7 +94,7 @@ public class enemyController : MonoBehaviour
         
         int maxScore = 0;
         float currentDistance = 0;
-        float minDistance = 500;
+        float minDistance = 1000f;
         int enemyDamage;
         int unitDamage;
         List<Unit> enemyUnits; //= new List<Unit>();
@@ -139,10 +126,9 @@ public class enemyController : MonoBehaviour
                             //Debug.Log(playerEnemy + " tropa");
 
                         }
-                        else
+                        else if (playerEnemy.isKing)
                         {
-                            if (playerEnemy.isKing)
-                                currentDistance = Mathf.Abs(node.gridX - playerEnemy.transform.position.x) + Mathf.Abs(node.gridY - playerEnemy.transform.position.y);
+                            currentDistance = Mathf.Abs(node.gridX - playerEnemy.transform.position.x) + Mathf.Abs(node.gridY - playerEnemy.transform.position.y);
                             //Debug.Log(currentDistance + "rey");
 
                         }
@@ -150,7 +136,6 @@ public class enemyController : MonoBehaviour
                         {
                             minDistance = currentDistance;
                             bestNode = node;
-
                         }
                     }
                     
@@ -195,7 +180,7 @@ public class enemyController : MonoBehaviour
                 }
             }
             //más aliados que enemigos
-            if (alliedUnits.Count >= enemyUnits.Count)
+            else if (alliedUnits.Count >= enemyUnits.Count)
             {
                 currentScore += alliedUnits.Count;
             }
