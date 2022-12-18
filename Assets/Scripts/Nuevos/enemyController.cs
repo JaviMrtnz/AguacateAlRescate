@@ -56,6 +56,13 @@ public class enemyController : MonoBehaviour
                     {
                         //Hay que intentar quitar de playerUnits el monigote que ha eliminado si no da error en la linea de comprobar la
                         //distancia con los enemigos linea 129
+                        foreach(Unit enemigo in playerUnits.ToArray())
+                        {
+                            if(enemies[0]== enemigo)
+                            {
+                                playerUnits.Remove(enemigo);
+                            }
+                        }
                         
                     }
                 }
@@ -123,26 +130,30 @@ public class enemyController : MonoBehaviour
                 //no hay enemigos alrededor de la casilla
                 foreach (Unit playerEnemy in playerUnits)
                 {
-                    enemyDamage = unit.attackDamage - playerEnemy.armor;
-                    if (playerEnemy.health <= enemyDamage)
+                    if(playerEnemy != null)
                     {
-                        currentDistance = Mathf.Abs(node.gridX - playerEnemy.transform.position.x) + Mathf.Abs(node.gridY - playerEnemy.transform.position.y);
-                        //Debug.Log(currentDistance + "tropa");
-
-                    }
-                    else
-                    {
-                        if (playerEnemy.isKing)
+                        enemyDamage = unit.attackDamage - playerEnemy.armor;
+                        if (playerEnemy.health <= enemyDamage && playerEnemy.health != 0)
+                        {
                             currentDistance = Mathf.Abs(node.gridX - playerEnemy.transform.position.x) + Mathf.Abs(node.gridY - playerEnemy.transform.position.y);
-                        //Debug.Log(currentDistance + "rey");
+                            //Debug.Log(playerEnemy + " tropa");
 
+                        }
+                        else
+                        {
+                            if (playerEnemy.isKing)
+                                currentDistance = Mathf.Abs(node.gridX - playerEnemy.transform.position.x) + Mathf.Abs(node.gridY - playerEnemy.transform.position.y);
+                            //Debug.Log(currentDistance + "rey");
+
+                        }
+                        if (currentDistance <= minDistance && currentDistance > 0)
+                        {
+                            minDistance = currentDistance;
+                            bestNode = node;
+
+                        }
                     }
-                    if (currentDistance <= minDistance && currentDistance > 0)
-                    {
-                        minDistance = currentDistance;
-                        bestNode = node;
-                        
-                    }
+                    
                 }
             }
             else if (enemyUnits.Count == 1)
