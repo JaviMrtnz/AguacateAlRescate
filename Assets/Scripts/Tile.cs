@@ -49,6 +49,7 @@ public class Tile : MonoBehaviour
         rend.color = Color.white;
         isWalkable = false;
         isCreatable = false;
+        node.hasUnit = false;
     }
 
     public void SetCreatable()

@@ -51,6 +51,7 @@ public class Unit : MonoBehaviour
 		camAnim = Camera.main.GetComponent<Animator>();
         gm = FindObjectOfType<GM>();
         grid = GetComponent<Grid>();
+        currentNode = Pathfinding.grid.NodeFromWorldPoint(transform.position);
         UpdateHealthDisplay();
     }
 
@@ -134,7 +135,7 @@ public class Unit : MonoBehaviour
         Tile[] tiles = FindObjectsOfType<Tile>();
         foreach (Tile tile in tiles)
         {        
-                if (Mathf.Abs(transform.position.x - tile.transform.position.x) + Mathf.Abs(transform.position.y - tile.transform.position.y) <= tileSpeed + 0.5f)
+                if (Mathf.Abs(transform.position.x - tile.transform.position.x) + Mathf.Abs(transform.position.y - tile.transform.position.y) <= tileSpeed)
                 { // how far he can move
                     if (tile.isClear() == true)
                     { // is the tile clear from any obstacles
@@ -156,7 +157,7 @@ public class Unit : MonoBehaviour
         List<Node> nodes = new List<Node>();
         foreach (Tile tile in tiles)
         {
-            if (Mathf.Abs(transform.position.x - tile.transform.position.x) + Mathf.Abs(transform.position.y - tile.transform.position.y) <= tileSpeed + 0.5f)
+            if (Mathf.Abs(transform.position.x - tile.transform.position.x) + Mathf.Abs(transform.position.y - tile.transform.position.y) <= tileSpeed)
             { // how far he can move
                 if (tile.isClear() == true)
                 { // is the tile clear from any obstacles
@@ -192,6 +193,7 @@ public class Unit : MonoBehaviour
     {
         gm.ResetTiles();
         StartCoroutine(StartMovement(movePos));
+        
     }
 
     public void Attack(Unit enemy) {
@@ -292,6 +294,7 @@ public class Unit : MonoBehaviour
         Node lastNode = null;
         if (path.Count > 0)
         {
+            Debug.Log(currentNode);
             int steps = 0;
             if (currentNode != null)
             {

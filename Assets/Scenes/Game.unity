@@ -24214,7 +24214,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 14, y: 0.000030517578}
+  m_AnchoredPosition: {x: 14, y: 0}
   m_SizeDelta: {x: 296.4, y: 158.1}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1193931158
@@ -31447,8 +31447,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectedUnit: {fileID: 0}
   playerTurn: 1
+  villageNumber: 3
   selectedUnitSquare: {fileID: 1941641901}
   enemyController: {fileID: 560751665}
+  characterCreator: {fileID: 0}
+  createknight: {fileID: 203797387408590348, guid: e4ad95c761a65f243b449f1e95d0c00e,
+    type: 3}
+  createArcher: {fileID: 626269173632994743, guid: dfd3953b532394b459bb5b605feb9936,
+    type: 3}
+  createDragon: {fileID: 3831706681586816672, guid: 0f0a2447a78d86143a35917ac0efe6e7,
+    type: 3}
+  createVillage: {fileID: 7767452286446655037, guid: da3435065a89e2442b5138b621f7826c,
+    type: 3}
   playerIcon: {fileID: 1193931158}
   playerOneIcon: {fileID: 1757168063971477599, guid: 62d39609d571d72449f803937a0552e2,
     type: 3}
@@ -31465,7 +31475,8 @@ MonoBehaviour:
   player1GoldText: {fileID: 581233310}
   player2GoldText: {fileID: 1063579114}
   createdUnit: {fileID: 0}
-  createdVillage: {fileID: 0}
+  createdVillage: {fileID: 726293821197588629, guid: da3435065a89e2442b5138b621f7826c,
+    type: 3}
   blueVictory: {fileID: 243264726}
   darkVictory: {fileID: 1969939416}
 --- !u!4 &1570414221

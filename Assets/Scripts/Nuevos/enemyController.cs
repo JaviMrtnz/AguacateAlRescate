@@ -18,7 +18,7 @@ public class enemyController : MonoBehaviour
 
     public IEnumerator enemyTurn()
     {
-
+        gmScript.BuyUnits();
         getIaUnits();
         getPlayerUnits();
 
@@ -26,7 +26,7 @@ public class enemyController : MonoBehaviour
         {
             getPlayerUnits();
 
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0);
             if (gmScript.selectedUnit != null)
             {
                 gmScript.selectedUnit.isSelected = false;

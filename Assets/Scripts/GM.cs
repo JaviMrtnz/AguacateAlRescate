@@ -9,10 +9,19 @@ public class GM : MonoBehaviour
     public Unit selectedUnit;
 
     public int playerTurn = 1;
+    public int villageNumber = 3;
    
 
     public Transform selectedUnitSquare;
     public enemyController enemyController;
+    public CharacterCreation characterCreator;
+
+    public GameObject createknight;
+    public GameObject createArcher;
+    public GameObject createDragon;
+    public GameObject createVillage;
+    private GameObject unitParent;
+    Node buyCurrentNode;
 
 
     private Animator camAnim;
@@ -46,6 +55,7 @@ public class GM : MonoBehaviour
     {
 		source = GetComponent<AudioSource>();
         camAnim = Camera.main.GetComponent<Animator>();
+        characterCreator = GetComponent<CharacterCreation>();
         enemyController = FindObjectOfType<enemyController>();
         GetGoldIncome(1);
 
@@ -156,7 +166,7 @@ public class GM : MonoBehaviour
         }
 
         GetGoldIncome(playerTurn);
-        GetComponent<CharacterCreation>().CloseCharacterCreationMenus();
+        characterCreator.CloseCharacterCreationMenus();
         createdUnit = null;
         if (playerTurn == 2)
         {
@@ -224,6 +234,52 @@ public class GM : MonoBehaviour
         player2GoldText.text = player2Gold.ToString();
     }
 
+    public void BuyUnits()
+    {
+        if (player2Gold >=100 && villageNumber <= 3)
+        {
+            CreateVillage();
+        }
+        if (player2Gold > 100 && villageNumber > 3)
+        {
+            CreateUnit();
+        }
+    }
+
+    public void CreateVillage()
+    {
+        unitParent = GameObject.FindGameObjectWithTag("unitParent").gameObject;
+        
+
+
+        characterCreator.BuyVillage(createdVillage);
+        int rand = Random.Range(0, GetComponent<RandomCreation>().spawnpoints.Count);
+        Instantiate(createdVillage, GetComponent<RandomCreation>().spawnpoints[rand].transform.position, Quaternion.identity, unitParent.transform);
+        buyCurrentNode = Pathfinding.grid.NodeFromWorldPoint(GetComponent<RandomCreation>().spawnpoints[rand].transform.position);
+        buyCurrentNode.walkable = false;
+        GetComponent<RandomCreation>().spawnpoints.RemoveAt(rand);
+    }
+
+    public void CreateUnit()
+    {
+        unitParent = GameObject.FindGameObjectWithTag("unitParent").gameObject;
+        GameObject[] units = new GameObject[3];
+        units[0] = createArcher;
+        units[1] = createDragon;
+        units[2] = createknight;
+
+        int unit = Random.Range(0, 3);
+
+
+
+        characterCreator.BuyVillage(createdVillage);
+        int rand = Random.Range(0, GetComponent<RandomCreation>().spawnpoints.Count);
+        Instantiate(units[unit], GetComponent<RandomCreation>().spawnpoints[rand].transform.position, Quaternion.identity, unitParent.transform);
+        buyCurrentNode = Pathfinding.grid.NodeFromWorldPoint(GetComponent<RandomCreation>().spawnpoints[rand].transform.position);
+        buyCurrentNode.walkable = false;
+        buyCurrentNode.hasUnit = true;
+        GetComponent<RandomCreation>().spawnpoints.RemoveAt(rand);
+    }
     // Victory UI
 
     public void ShowVictoryPanel(int playerNumber) {
