@@ -245,7 +245,7 @@ public class GM : MonoBehaviour
         {
             CreateVillage();
         }
-        if (player2Gold < 100 && villageNumber > 3)
+        if (player2Gold > 119 && villageNumber > 3)
         {
             CreateUnit();
         }
@@ -257,11 +257,11 @@ public class GM : MonoBehaviour
 
         characterCreator.BuyVillage(createdVillage);
         int rand = Random.Range(0, creacion.spawnpoints.Count);
-        //Falta meter aqui para que si el nodo esta ocupado que lo cree en otro
         Instantiate(createdVillage, creacion.spawnpoints[rand].transform.position, Quaternion.identity, unitParent.transform);
         buyCurrentNode = Pathfinding.grid.NodeFromWorldPoint(creacion.spawnpoints[rand].transform.position);
         buyCurrentNode.walkable = false;
         creacion.spawnpoints.RemoveAt(rand);
+        villageNumber++;
     }
 
     public void CreateUnit()
@@ -278,12 +278,15 @@ public class GM : MonoBehaviour
 
         characterCreator.BuyVillage(createdVillage);
         int rand = Random.Range(0, creacion.spawnpoints.Count);
-        //Falta meter aqui para que si el nodo esta ocupado que lo cree en otro
-        Instantiate(units[unit], creacion.spawnpoints[rand].transform.position, Quaternion.identity, unitParent.transform);
-        buyCurrentNode = Pathfinding.grid.NodeFromWorldPoint(creacion.spawnpoints[rand].transform.position);
-        buyCurrentNode.walkable = false;
-        buyCurrentNode.hasUnit = true;
-        creacion.spawnpoints.RemoveAt(rand);
+        if (creacion.spawnpoints.Count != 0 )
+        {
+            Instantiate(units[unit], creacion.spawnpoints[rand].transform.position, Quaternion.identity, unitParent.transform);
+            buyCurrentNode = Pathfinding.grid.NodeFromWorldPoint(creacion.spawnpoints[rand].transform.position);
+            buyCurrentNode.walkable = false;
+            buyCurrentNode.hasUnit = true;
+            creacion.spawnpoints.RemoveAt(rand);
+        }
+       
     }
     // Victory UI
 
