@@ -9,6 +9,7 @@ public class RandomCreation : MonoBehaviour
     [SerializeField] public GameObject archer;
     [SerializeField] public GameObject dragon;
     [SerializeField] public GameObject village;
+    [SerializeField] public GameObject support;
     [SerializeField] public GameObject[] trees;
 
 
@@ -66,6 +67,12 @@ public class RandomCreation : MonoBehaviour
             spawnpoints.RemoveAt(rand);
         }
 
+        rand = Random.Range(0, spawnpoints.Count);
+        Instantiate(support, spawnpoints[rand].transform.position, Quaternion.identity, unitParent.transform);
+        currentNode = Pathfinding.grid.NodeFromWorldPoint(spawnpoints[rand].transform.position);
+        currentNode.walkable = false;
+        currentNode.hasUnit = true;
+        spawnpoints.RemoveAt(rand);
 
         for (int i = 0; i < 3; i++)
         {

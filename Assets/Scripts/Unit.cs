@@ -17,6 +17,7 @@ public class Unit : MonoBehaviour
     public int attackRadius;
     public bool hasAttacked;
     public List<Unit> enemiesInRange = new List<Unit>();
+    public List<Unit> alliesInRange = new List<Unit>();
 
     public int playerNumber;
 
@@ -27,6 +28,10 @@ public class Unit : MonoBehaviour
     public int attackDamage;
     public int defenseDamage;
     public int armor;
+
+    public bool isSupport = false;
+    public int healPower;
+    public int maxHealth;
 
     public DamageIcon damageIcon;
 
@@ -53,6 +58,11 @@ public class Unit : MonoBehaviour
         grid = GetComponent<Grid>();
         currentNode = Pathfinding.grid.NodeFromWorldPoint(transform.position);
         UpdateHealthDisplay();
+
+        if (transform.tag == "Support")
+            isSupport = true;
+        maxHealth = health;
+        
     }
 
     private void UpdateHealthDisplay ()
@@ -97,6 +107,7 @@ public class Unit : MonoBehaviour
 
                     GetWalkableTiles();
                     GetEnemies();
+                    GetAllies();
                 }
 
             }
@@ -110,7 +121,11 @@ public class Unit : MonoBehaviour
                     if (gm.selectedUnit.enemiesInRange.Contains(unit) && !gm.selectedUnit.hasAttacked)
                     { // does the currently selected unit have in his list the enemy we just clicked on
                         gm.selectedUnit.Attack(unit);
-
+                    }
+                    if (gm.selectedUnit.alliesInRange.Count !=0 && !gm.selectedUnit.hasAttacked && isSupport)
+                    {
+                            Debug.Log("cura en teoria");
+                            gm.selectedUnit.Heal();          
                     }
                 }
             }
@@ -182,6 +197,25 @@ public class Unit : MonoBehaviour
             {
                 if (enemy.playerNumber != gm.playerTurn && !hasAttacked) { // make sure you don't attack your allies
                     enemiesInRange.Add(enemy);
+                    enemy.weaponIcon.SetActive(true);
+                }
+
+            }
+        }
+    }
+    public void GetAllies()
+    {
+
+        enemiesInRange.Clear();
+
+        Unit[] enemies = FindObjectsOfType<Unit>();
+        foreach (Unit enemy in enemies)
+        {
+            if (Mathf.Abs(transform.position.x - enemy.transform.position.x) + Mathf.Abs(transform.position.y - enemy.transform.position.y) <= attackRadius) // check is the enemy is near enough to attack
+            {
+                if (enemy.playerNumber == gm.playerTurn && !hasAttacked)
+                { 
+                    alliesInRange.Add(enemy);
                     enemy.weaponIcon.SetActive(true);
                 }
 
@@ -271,6 +305,28 @@ public class Unit : MonoBehaviour
 
         gm.UpdateInfoStats();
   
+
+    }
+
+    public void Heal()
+    {
+        hasAttacked = true;
+
+        foreach(Unit allyHere in alliesInRange) 
+        {
+            Debug.Log("funcion de curar");
+            if (allyHere.health < maxHealth)
+            {
+                allyHere.health += healPower;
+                allyHere.UpdateHealthDisplay();
+                DamageIcon d = Instantiate(damageIcon, allyHere.transform.position, Quaternion.identity);
+                d.Setup(1);
+            }
+            gm.UpdateInfoStats();
+        }
+
+        
+
 
     }
 

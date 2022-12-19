@@ -11367,7 +11367,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 294486927}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5592da87f8c1f5f43963fe523f0e2b3c, type: 3}
+  m_Script: {fileID: 11500000, guid: 23b356417fa411849b6778539bcf1dec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   king: {fileID: 484875169853229663, guid: f054a74375d258145b59bb210d52b539, type: 3}
@@ -11375,6 +11375,7 @@ MonoBehaviour:
   archer: {fileID: 3293640991218369701, guid: e29861ac58e55d04ca67678a523a8c67, type: 3}
   dragon: {fileID: 1642533359335901395, guid: 88b3f3ba5316f7e45aac1f15d6b71e81, type: 3}
   village: {fileID: 7767452286446655037, guid: da3435065a89e2442b5138b621f7826c, type: 3}
+  support: {fileID: 203797387408590348, guid: 67b9c2200090f364ca8b85fe9b3ee4e5, type: 3}
   trees:
   - {fileID: 2496187796435995666, guid: 9db83ac53c4060e46a7d8ca091b68b8f, type: 3}
   spawnpoints:
@@ -55786,7 +55787,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1370443753}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5592da87f8c1f5f43963fe523f0e2b3c, type: 3}
+  m_Script: {fileID: 11500000, guid: 23b356417fa411849b6778539bcf1dec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   king: {fileID: 179943397156523648, guid: 0fb875a05caa9ef42bc5ab8ca814b69d, type: 3}
@@ -55794,6 +55795,7 @@ MonoBehaviour:
   archer: {fileID: 626269173632994743, guid: dfd3953b532394b459bb5b605feb9936, type: 3}
   dragon: {fileID: 3831706681586816672, guid: 0f0a2447a78d86143a35917ac0efe6e7, type: 3}
   village: {fileID: 4688297137751264698, guid: 76ee34c1b9be29f4ebb1071fbfe8504a, type: 3}
+  support: {fileID: 203797387408590348, guid: 444c32e3e2fa36b4e985f6ed52b8ffb8, type: 3}
   trees:
   - {fileID: 2496187796435995666, guid: 9db83ac53c4060e46a7d8ca091b68b8f, type: 3}
   spawnpoints:

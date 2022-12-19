@@ -44,9 +44,14 @@ public class enemyController : MonoBehaviour
             yield return new WaitForSeconds(1);
 
             unit.GetEnemies();
+            if (unit.isSupport)
+            {
+                unit.Heal();
+            }
 
             if (!unit.hasAttacked)
             {
+                
                 List<Unit> enemies = unit.enemiesInRange;
                 if (enemies.Count > 0)
                 {
@@ -112,8 +117,21 @@ public class enemyController : MonoBehaviour
             enemyUnits = gmScript.checkEnemies(node);
             alliedUnits = gmScript.checkAllies(node);
 
+            
+
             if (enemyUnits.Count == 0)
             {
+                if (unit.isSupport)
+                {
+                        foreach (Unit ally in alliedUnits)
+                        {
+                            if (ally.health < ally.maxHealth)
+                            {
+                                return node;
+                            }
+                            
+                        }
+                }
                 //no hay enemigos alrededor de la casilla
                 foreach (Unit playerEnemy in playerUnits)
                 {
@@ -143,6 +161,21 @@ public class enemyController : MonoBehaviour
             }
             else if (enemyUnits.Count == 1)
             {
+                if (unit.isSupport)
+                {
+                    foreach (Unit ally in alliedUnits)
+                    {
+                        if (ally.health < ally.maxHealth)
+                        {
+                            return node;
+                        }
+                        else
+                        {
+                            currentScore = 5;
+                        }
+
+                    }
+                }
                 //hay un enemigo
                 unitDamage = enemyUnits[0].defenseDamage - unit.armor;
                 enemyDamage = unit.attackDamage - enemyUnits[0].armor;
@@ -166,7 +199,22 @@ public class enemyController : MonoBehaviour
             }
             else if (enemyUnits.Count > 1)
             {
-                
+                if (unit.isSupport)
+                {
+                    foreach (Unit ally in alliedUnits)
+                    {
+                        if (ally.health < ally.maxHealth)
+                        {
+                            return node;
+                        }
+                        else
+                        {
+                            currentScore = 5;
+                        }
+
+                    }
+                }
+
                 //hay enemigos alrededor de la casilla
                 foreach (Unit playerEnemy in enemyUnits)
                 {
