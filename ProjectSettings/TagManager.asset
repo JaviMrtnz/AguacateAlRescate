@@ -9,6 +9,7 @@ TagManager:
   - unitParent
   - Dragon
   - Knight
+  - treeParent
   layers:
   - Default
   - TransparentFX
