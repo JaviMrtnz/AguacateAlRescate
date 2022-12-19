@@ -49,7 +49,12 @@ public class GM : MonoBehaviour
     public GameObject blueVictory;
     public GameObject darkVictory;
 
+
+    public RandomCreation creacion;
+
 	private AudioSource source;
+
+
 
     private void Start()
     {
@@ -240,7 +245,7 @@ public class GM : MonoBehaviour
         {
             CreateVillage();
         }
-        if (player2Gold > 100 && villageNumber > 3)
+        if (player2Gold < 100 && villageNumber > 3)
         {
             CreateUnit();
         }
@@ -249,15 +254,14 @@ public class GM : MonoBehaviour
     public void CreateVillage()
     {
         unitParent = GameObject.FindGameObjectWithTag("unitParent").gameObject;
-        
-
 
         characterCreator.BuyVillage(createdVillage);
-        int rand = Random.Range(0, GetComponent<RandomCreation>().spawnpoints.Count);
-        Instantiate(createdVillage, GetComponent<RandomCreation>().spawnpoints[rand].transform.position, Quaternion.identity, unitParent.transform);
-        buyCurrentNode = Pathfinding.grid.NodeFromWorldPoint(GetComponent<RandomCreation>().spawnpoints[rand].transform.position);
+        int rand = Random.Range(0, creacion.spawnpoints.Count);
+        //Falta meter aqui para que si el nodo esta ocupado que lo cree en otro
+        Instantiate(createdVillage, creacion.spawnpoints[rand].transform.position, Quaternion.identity, unitParent.transform);
+        buyCurrentNode = Pathfinding.grid.NodeFromWorldPoint(creacion.spawnpoints[rand].transform.position);
         buyCurrentNode.walkable = false;
-        GetComponent<RandomCreation>().spawnpoints.RemoveAt(rand);
+        creacion.spawnpoints.RemoveAt(rand);
     }
 
     public void CreateUnit()
@@ -273,12 +277,13 @@ public class GM : MonoBehaviour
 
 
         characterCreator.BuyVillage(createdVillage);
-        int rand = Random.Range(0, GetComponent<RandomCreation>().spawnpoints.Count);
-        Instantiate(units[unit], GetComponent<RandomCreation>().spawnpoints[rand].transform.position, Quaternion.identity, unitParent.transform);
-        buyCurrentNode = Pathfinding.grid.NodeFromWorldPoint(GetComponent<RandomCreation>().spawnpoints[rand].transform.position);
+        int rand = Random.Range(0, creacion.spawnpoints.Count);
+        //Falta meter aqui para que si el nodo esta ocupado que lo cree en otro
+        Instantiate(units[unit], creacion.spawnpoints[rand].transform.position, Quaternion.identity, unitParent.transform);
+        buyCurrentNode = Pathfinding.grid.NodeFromWorldPoint(creacion.spawnpoints[rand].transform.position);
         buyCurrentNode.walkable = false;
         buyCurrentNode.hasUnit = true;
-        GetComponent<RandomCreation>().spawnpoints.RemoveAt(rand);
+        creacion.spawnpoints.RemoveAt(rand);
     }
     // Victory UI
 
